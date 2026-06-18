@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -153,7 +154,8 @@ fun PanelButton(
             onClick = onLimparClick,
             modifier = Modifier
                 .padding(16.dp)
-                .weight(1f)
+                .weight(1f),
+            colors = ButtonDefaults.buttonColors( containerColor = MaterialTheme.colorScheme.secondary)
         ) {
             Text(text = "Limpar")
         }
