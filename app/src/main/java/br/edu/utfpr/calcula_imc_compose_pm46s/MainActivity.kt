@@ -1,7 +1,6 @@
 package br.edu.utfpr.calcula_imc_compose_pm46s
 
 import android.os.Bundle
-import android.widget.Button
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -19,16 +18,13 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import br.edu.utfpr.calcula_imc_compose_pm46s.model.ImcViewModel
 import br.edu.utfpr.calcula_imc_compose_pm46s.ui.theme.CalculaIMCComposePM46STheme
 
 class MainActivity : ComponentActivity() {
@@ -48,28 +44,14 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun CalculaIMCScreen(modifier: Modifier = Modifier) {
+fun CalculaIMCScreen(
+    modifier: Modifier = Modifier,
+    viewModel: ImcViewModel = viewModel()
+) {
 
-    var peso by rememberSaveable { mutableStateOf("") }
-    var altura by rememberSaveable { mutableStateOf("") }
-    var resultado by rememberSaveable { mutableStateOf("0.0") }
-
-    val calcularIMC = {
-        val pesoValor = peso.toDoubleOrNull()
-        val alturaValor = altura.toDoubleOrNull()
-
-        if (pesoValor != null && alturaValor != null) {
-            val imc = pesoValor / (alturaValor * alturaValor)
-            resultado = String.format( "%.2f", imc)
-        }
-    }
-
-    val limparTela = {
-        peso = ""
-        altura = ""
-        resultado = "0.00"
-    }
-
+    var peso = viewModel.peso
+    var altura = viewModel.altura
+    var resultado = viewModel.resultado
 
     Column(
         modifier = modifier,
@@ -77,8 +59,8 @@ fun CalculaIMCScreen(modifier: Modifier = Modifier) {
     ) {
 
         OutlinedTextField(
-            value = peso,
-            onValueChange = {peso = it},
+            value = viewModel.peso,
+            onValueChange = {viewModel.onPesoChange( it )},
             label = {Text( "Peso em Kg")},
             modifier = Modifier
                 .fillMaxWidth()
@@ -87,8 +69,8 @@ fun CalculaIMCScreen(modifier: Modifier = Modifier) {
         )
 
         OutlinedTextField(
-            value = altura,
-            onValueChange = {altura = it},
+            value = viewModel.altura,
+            onValueChange = {viewModel.onAlturaChange(it)},
             label = {Text( "Altura em m")},
             modifier = Modifier
                 .fillMaxWidth()
@@ -101,8 +83,8 @@ fun CalculaIMCScreen(modifier: Modifier = Modifier) {
         }
 
         PanelButton(
-            onCalcularClick = calcularIMC,
-            onLimparClick = limparTela
+            onCalcularClick = { viewModel.calcularIMC()},
+            onLimparClick = { viewModel.limparTela()}
         )
 
 
