@@ -95,53 +95,71 @@ fun CalculaIMCScreen(modifier: Modifier = Modifier) {
             keyboardOptions = KeyboardOptions( keyboardType = KeyboardType.Number)
         )
 
-        Column(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.primary),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = "Resultado:",
-                modifier = Modifier.padding( 16.dp)
-            )
-
-            Text(
-                text = resultado,
-                modifier = Modifier.padding( 16.dp),
-                style = MaterialTheme.typography.headlineLarge
-            )
-
+        if ( resultado.toDouble() > 0 ) {
+            PanelResult(resultado)
         }
 
-        Row{
-            Button(
-                onClick = calcularIMC,
-                modifier = Modifier
-                    .padding(16.dp)
-                    .weight(1f)
-            ) {
-                Text(text = "Calcular")
-            }
-
-            Button(
-                onClick = { peso = ""; altura = ""; resultado = "0.0" },
-                modifier = Modifier
-                    .padding(16.dp)
-                    .weight(1f)
-            ) {
-                Text(text = "Limpar")
-            }
-        }
+        PanelButton(
+            onCalcularClick = calcularIMC,
+            onLimparClick = limparTela
+        )
 
 
     } //fim do column
 
 }//fim do CalculaIMCScreen
 
+@Composable
+fun PanelResult( resultado: String) {
+    Column(
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.primary),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
 
+        Text(
+            text = "Resultado:",
+            modifier = Modifier.padding( 16.dp)
+        )
 
+        Text(
+            text = resultado,
+            modifier = Modifier.padding( 16.dp),
+            style = MaterialTheme.typography.headlineLarge
+        )
+
+    }
+
+}
+
+@Composable
+fun PanelButton(
+    onCalcularClick: () -> Unit,
+    onLimparClick: () -> Unit
+) {
+    Row{
+        Button(
+            onClick = onCalcularClick,
+            modifier = Modifier
+                .padding(16.dp)
+                .weight(1f)
+        ) {
+            Text(text = "Calcular")
+        }
+
+        Button(
+            onClick = onLimparClick,
+            modifier = Modifier
+                .padding(16.dp)
+                .weight(1f)
+        ) {
+            Text(text = "Limpar")
+        }
+    }
+
+}
 
 
 
