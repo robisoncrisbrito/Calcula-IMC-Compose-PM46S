@@ -5,12 +5,15 @@ import android.widget.Button
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -20,6 +23,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,7 +38,6 @@ class MainActivity : ComponentActivity() {
             CalculaIMCComposePM46STheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     CalculaIMCScreen(
-                        name = "Android",
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -44,14 +47,13 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun CalculaIMCScreen(name: String, modifier: Modifier = Modifier) {
+fun CalculaIMCScreen(modifier: Modifier = Modifier) {
 
     var peso by rememberSaveable { mutableStateOf("") }
     var altura by rememberSaveable { mutableStateOf("") }
     var resultado by rememberSaveable { mutableStateOf("0.0") }
 
     val calcularIMC = {
-
         val pesoValor = peso.toDoubleOrNull()
         val alturaValor = altura.toDoubleOrNull()
 
@@ -59,18 +61,19 @@ fun CalculaIMCScreen(name: String, modifier: Modifier = Modifier) {
             val imc = pesoValor / (alturaValor * alturaValor)
             resultado = String.format( "%.2f", imc)
         }
+    }
 
+    val limparTela = {
+        peso = ""
+        altura = ""
+        resultado = "0.00"
     }
 
 
-
     Column(
-        modifier = modifier
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = "Peso:",
-            modifier = Modifier.padding( 16.dp)
-        )
 
         OutlinedTextField(
             value = peso,
@@ -80,11 +83,6 @@ fun CalculaIMCScreen(name: String, modifier: Modifier = Modifier) {
                 .fillMaxWidth()
                 .padding(16.dp),
             keyboardOptions = KeyboardOptions( keyboardType = KeyboardType.Number)
-        )
-
-        Text(
-            text = "Altura:",
-            modifier = Modifier.padding( 16.dp)
         )
 
         OutlinedTextField(
@@ -97,30 +95,44 @@ fun CalculaIMCScreen(name: String, modifier: Modifier = Modifier) {
             keyboardOptions = KeyboardOptions( keyboardType = KeyboardType.Number)
         )
 
-        Text(
-            text = "Resultado:",
-            modifier = Modifier.padding( 16.dp)
-        )
-
-        Text(
-            text = resultado,
-            modifier = Modifier.padding( 16.dp)
-        )
-
-        Button(
-            onClick = calcularIMC,
+        Column(
             modifier = Modifier
                 .padding(16.dp)
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.primary),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "Calcular")
+            Text(
+                text = "Resultado:",
+                modifier = Modifier.padding( 16.dp)
+            )
+
+            Text(
+                text = resultado,
+                modifier = Modifier.padding( 16.dp),
+                style = MaterialTheme.typography.headlineLarge
+            )
+
         }
 
-        Button(
-            onClick = { peso = ""; altura = ""; resultado = "0.0" },
-            modifier = Modifier
-                .padding(16.dp)
-        ) {
-            Text(text = "Limpar")
+        Row{
+            Button(
+                onClick = calcularIMC,
+                modifier = Modifier
+                    .padding(16.dp)
+                    .weight(1f)
+            ) {
+                Text(text = "Calcular")
+            }
+
+            Button(
+                onClick = { peso = ""; altura = ""; resultado = "0.0" },
+                modifier = Modifier
+                    .padding(16.dp)
+                    .weight(1f)
+            ) {
+                Text(text = "Limpar")
+            }
         }
 
 
@@ -137,6 +149,6 @@ fun CalculaIMCScreen(name: String, modifier: Modifier = Modifier) {
 @Composable
 fun CalculaIMCScreenPreview() {
     CalculaIMCComposePM46STheme {
-        CalculaIMCScreen("Android")
+        CalculaIMCScreen()
     }
 }
